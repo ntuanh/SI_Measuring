@@ -1,0 +1,22 @@
+model:
+  name: yolo26n
+  batch: 5
+  data: "data/videos/video.mp4"
+
+mode:
+  only: "Edge"  # or "Cloud"
+
+compress:
+  enable: False
+  bit-rate: 8
+
+rabbitmq:
+  address: 127.0.0.1
+  username: guest
+  password: guest
+  virtual-host: /
+
+visual:
+  enable: True
+  FPS: 30
+
