@@ -14,6 +14,9 @@ class Cloud:
         else :
             self.enable_inference = False
 
+        self.lst_fps = []
+        self.prev_time = -1
+
     def run(self , data ):
         if self.enable_inference :
             model = YOLO(self.model)
@@ -40,6 +43,15 @@ class Cloud:
                     if cv2.waitKey(1) & 0xFF == 27:
                         cv2.destroyAllWindows()
                         return
+
+        if self.prev_time == -1 :
+            self.prev_time = time.time_ns()
+        else :
+            period = time.time_ns() - self.prev_time
+            fps_mean = period / self.batch_size
+            self.lst_fps.append(fps_mean)
+            print(f"fps mean of batch {1 / (fps_mean / 1e9)}")
+
 
 
 
