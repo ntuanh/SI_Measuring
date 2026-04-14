@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+import torch
 import cv2 , time
 
 class Cloud:
@@ -17,10 +18,14 @@ class Cloud:
         self.lst_fps = []
         self.prev_time = -1
 
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        print(f"Device {self.device}")
+
     def run(self , data ):
         if self.enable_inference :
-            model = YOLO(self.model)
-            results = model(data, batch=self.batch_size , verbose = self.show)
+            # print()
+            model = YOLO(self.model).to(self.device)
+            results = model(data, batch=self.batch_size , verbose = self.show , device=self.device)
 
             if self.show:
                 for r in results:
@@ -50,7 +55,8 @@ class Cloud:
             period = time.time_ns() - self.prev_time
             fps_mean = period / self.batch_size
             self.lst_fps.append(fps_mean)
-            print(f"fps mean of batch {1 / (fps_mean / 1e9)}")
+            print(1 / (fps_mean / 1e9) , end=",")
+            self.prev_time = time.time_ns()
 
 
 
